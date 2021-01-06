@@ -2,7 +2,6 @@ import React, { useCallback, useRef, useContext } from 'react';
 import { FaUser, FaLock } from 'react-icons/fa';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import * as Yup from 'yup';
 
 import { AuthContext } from '../../context/AuthContext';
 import { Container, Content, Background } from './styles';
@@ -18,7 +17,9 @@ interface LoginFormData {
 const Login: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const { login } = useContext(AuthContext);
+  const { trainer, login } = useContext(AuthContext);
+
+  console.log(trainer);
 
   const handleSubmit = useCallback(
     async (data: LoginFormData) => {
