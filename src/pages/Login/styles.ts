@@ -1,26 +1,39 @@
-import styled from 'styled-components';
-import backgroundImg from '../../assets/mega-charizard-wallpaper.jpg';
+import styled, { keyframes } from 'styled-components';
 
 const Container = styled.div`
   height: 100vh;
   display: flex;
-  align-items: stretch;
-
-  background-color: #2c2a2b;
+  justify-content: center;
+  background-color: #1e272e;
 `;
 
 const Content = styled.div`
   display: flex;
+  justify-content: center;
+  padding: 64px 0 16px;
+  width: 100%;
+  max-width: 720px;
+`;
+
+const appearFromLeft = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+const AnimationContainer = styled.div`
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-
-  padding: 120px 0 24px;
-  width: 100%;
-  max-width: 720px;
+  animation: ${appearFromLeft} 1s;
 
   form {
-    margin: 80px 0;
     width: 340px;
     text-align: center;
 
@@ -40,10 +53,4 @@ const Content = styled.div`
   }
 `;
 
-const Background = styled.div`
-  flex: 1;
-  background: url(${backgroundImg}) no-repeat center;
-  background-size: cover;
-`;
-
-export { Container, Content, Background };
+export { Container, Content, AnimationContainer };

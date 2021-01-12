@@ -7,12 +7,12 @@ interface ContainerProps {
 }
 
 export const Container = styled.div<ContainerProps>`
-  background: ${shade(0.2, '#2c2a2b')};
+  background: ${shade(0.2, '#1e272e')};
   border-radius: 10px;
   padding: 16px;
   width: 100%;
 
-  border: 2px solid #2c2a2b;
+  border: 2px solid #1e272e;
   color: rgba(255, 255, 255, 0.5);
 
   display: flex;
