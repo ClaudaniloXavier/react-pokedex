@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useState } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
 interface LoginCredentials {
   trainer: string;
@@ -13,13 +13,22 @@ interface AuthState {
 interface AuthContextData {
   trainer: object;
   login(credentials: LoginCredentials): Promise<void>;
+  logout(): void;
 }
 
-export const AuthContext = createContext<AuthContextData>(
-  {} as AuthContextData,
-);
+const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-export const AuthProvider: React.FC = ({ children }) => {
+function useAuth(): AuthContextData {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error('useAuth must be user within an AuthProvider');
+  }
+
+  return context;
+}
+
+const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>(() => {
     const token = localStorage.getItem('@pokedex:token');
     const user = localStorage.getItem('@pokedex:user');
@@ -50,13 +59,22 @@ export const AuthProvider: React.FC = ({ children }) => {
 
       setData({ token, user });
     } else {
-      console.log('Invalid trainer');
+      throw new Error('Invalid trainer');
     }
   }, []);
 
+  const logout = useCallback(() => {
+    localStorage.removeItem('@pokedex:token');
+    localStorage.removeItem('@pokedex:user');
+
+    setData({} as AuthState);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ trainer: data.user, login }}>
+    <AuthContext.Provider value={{ trainer: data.user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export { AuthProvider, useAuth };

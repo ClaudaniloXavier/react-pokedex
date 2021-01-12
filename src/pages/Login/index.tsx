@@ -1,9 +1,11 @@
-import React, { useCallback, useRef, useContext } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { FaUser, FaLock } from 'react-icons/fa';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 
-import { AuthContext } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/auth';
+import { useToast } from '../../hooks/toast';
+
 import { Container, Content, Background } from './styles';
 
 import Input from '../../components/Input';
@@ -17,18 +19,25 @@ interface LoginFormData {
 const Login: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const { trainer, login } = useContext(AuthContext);
-
-  console.log(trainer);
+  const { login } = useAuth();
+  const { addToast } = useToast();
 
   const handleSubmit = useCallback(
     async (data: LoginFormData) => {
-      login({
-        trainer: data.trainer,
-        password: data.password,
-      });
+      try {
+        await login({
+          trainer: data.trainer,
+          password: data.password,
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Authentication error',
+          description: 'Invalid credentials. Trainer not found.',
+        });
+      }
     },
-    [login],
+    [login, addToast],
   );
 
   return (
