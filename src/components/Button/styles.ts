@@ -17,4 +17,10 @@ export const Container = styled.button`
   &:hover {
     background: ${shade(0.2, '#1e90ff')};
   }
+
+  &:disabled {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.3);
+    cursor: not-allowed;
+  }
 `;

@@ -12,6 +12,21 @@ const indeterminateShort = keyframes`
   }
 `;
 
+const show = keyframes`
+  0% {
+    height: 0;
+    display: none;
+  }
+  1% {
+    height: 0;
+    display: block;
+  }
+  100% {
+    height: 4px;
+    display: block;
+  }
+`;
+
 export const Container = styled.div`
   position: absolute;
   top: 0;
@@ -20,6 +35,7 @@ export const Container = styled.div`
   height: 4px;
   overflow: hidden;
   background: ${lighten(0.35, '#1e90ff')};
+  animation: ${show} 280ms cubic-bezier(0, 0, 0.2, 1) forwards;
 
   div {
     &:before {

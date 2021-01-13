@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { FaUser, FaLock } from 'react-icons/fa';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -6,12 +6,12 @@ import { useHistory } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
-import { useLoading } from '../../hooks/loading';
 
 import { Container, Content, AnimationContainer } from './styles';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import Loading from '../../components/Loading';
 
 interface LoginFormData {
   trainer: string;
@@ -20,34 +20,41 @@ interface LoginFormData {
 
 const Login: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const [loading, setLoading] = useState(false);
 
   const { login } = useAuth();
   const { addToast } = useToast();
-  const { toggleLoading } = useLoading();
   const history = useHistory();
 
   const handleSubmit = useCallback(
-    async (data: LoginFormData) => {
-      toggleLoading();
-      try {
-        await login({
+    (data: LoginFormData) => {
+      if (!data.trainer && !data.password) return;
+
+      setLoading(true);
+      setTimeout(() => {
+        login({
           trainer: data.trainer,
           password: data.password,
-        });
-        history.push('home');
-      } catch (err) {
-        addToast({
-          type: 'error',
-          title: 'Authentication error',
-          description: 'Invalid credentials. Trainer not found.',
-        });
-      }
+        })
+          .then(() => {
+            history.push('home');
+          })
+          .catch(() => {
+            addToast({
+              type: 'error',
+              title: 'Authentication error',
+              description: 'Invalid credentials. Trainer not found.',
+            });
+          })
+          .finally(() => setLoading(false));
+      }, 2000);
     },
-    [login, addToast, history, toggleLoading],
+    [login, addToast, history],
   );
 
   return (
     <Container>
+      {loading && <Loading />}
       <Content>
         <AnimationContainer>
           <h1>React Pokédex</h1>
@@ -69,7 +76,9 @@ const Login: React.FC = () => {
               icon={FaLock}
             />
 
-            <Button type="submit">Login</Button>
+            <Button disabled={loading} type="submit">
+              Login
+            </Button>
           </Form>
 
           <span>

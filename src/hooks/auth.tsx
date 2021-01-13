@@ -56,7 +56,6 @@ const AuthProvider: React.FC = ({ children }) => {
 
       localStorage.setItem('@pokedex:token', token);
       localStorage.setItem('@pokedex:user', JSON.stringify(user));
-
       setData({ token, user });
     } else {
       throw new Error('Invalid trainer');
