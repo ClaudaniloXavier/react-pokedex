@@ -9,4 +9,5 @@ const Loading: React.FC = () => {
     </Container>
   );
 };
+
 export default Loading;

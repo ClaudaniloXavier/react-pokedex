@@ -45,7 +45,10 @@ const AuthProvider: React.FC = ({ children }) => {
         data: {
           user: {
             id: 1,
-            trainer: 'Frauzera',
+            trainer: 'Claudanilo Xavier',
+            city: 'Vermilion',
+            photo:
+              'https://pm1.narvii.com/6750/71cb7c25c336c921963ff6417c27ee051dcdd50av2_00.jpg',
           },
           token:
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHJhaW5lciI6IkZyYXV6ZXJhIn0.iSf407k430qvty2FlPwgNupyCGwnqlFVZ__9GhOJnP8',

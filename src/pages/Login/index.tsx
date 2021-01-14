@@ -40,13 +40,13 @@ const Login: React.FC = () => {
             history.push('home');
           })
           .catch(() => {
+            setLoading(false);
             addToast({
               type: 'error',
               title: 'Authentication error',
               description: 'Invalid credentials. Trainer not found.',
             });
-          })
-          .finally(() => setLoading(false));
+          });
       }, 2000);
     },
     [login, addToast, history],
@@ -66,6 +66,7 @@ const Login: React.FC = () => {
               name="trainer"
               type="text"
               placeholder="Trainer"
+              disabled={loading}
               icon={FaUser}
             />
 
@@ -73,6 +74,7 @@ const Login: React.FC = () => {
               name="password"
               type="password"
               placeholder="Password"
+              disabled={loading}
               icon={FaLock}
             />
 
