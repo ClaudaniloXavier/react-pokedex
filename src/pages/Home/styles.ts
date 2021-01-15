@@ -9,7 +9,7 @@ const Container = styled.div`
 const Content = styled.div`
   flex: 1;
   width: 100%;
-  max-width: 1024px;
+  max-width: 820px;
   margin: 0 auto;
   padding: 32px 16px;
 

@@ -1,7 +1,9 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
+
+import { useToast } from '../../hooks/toast';
 
 import { Container, Content } from './styles';
 
@@ -9,6 +11,7 @@ import Toolbar from '../../components/Toolbar';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Pokemon from '../../components/Pokemon';
+import Loading from '../../components/Loading';
 
 import api from '../../services/api';
 
@@ -17,23 +20,55 @@ interface SearchFormData {
 }
 
 interface PokemonState {
-  abilities: [];
-  baseExperience: number;
+  id: number;
+  height: number;
+  name: string;
+  order: number;
+  weight: number;
 }
 
 const Home: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   const [pokemon, setPokemon] = useState<PokemonState>({} as PokemonState);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = useCallback((data: SearchFormData) => {
-    api.get(`pokemon/${data.search}`).then((res) => {
-      setPokemon(res.data);
-    });
-  }, []);
+  const { addToast } = useToast();
+
+  const getPokemon = useCallback(
+    (data) => {
+      setLoading(true);
+      api
+        .get(`pokemon/${data.search}`)
+        .then((res) => {
+          setPokemon(res.data);
+        })
+        .catch(() => {
+          addToast({
+            type: 'error',
+            title: 'Pokémon not found.',
+            description: 'Pokémon not found or not exists',
+          });
+        })
+        .finally(() => setLoading(false));
+    },
+    [addToast],
+  );
+
+  const handleSubmit = useCallback(
+    (data: SearchFormData) => {
+      getPokemon(data);
+    },
+    [getPokemon],
+  );
+
+  useEffect(() => {
+    getPokemon({ search: 'squirtle' });
+  }, [getPokemon]);
 
   return (
     <Container>
+      {loading && <Loading />}
       <Toolbar />
 
       <Content>
@@ -49,7 +84,7 @@ const Home: React.FC = () => {
           </div>
         </Form>
 
-        <Pokemon pokemon={pokemon} />
+        {!loading && pokemon && <Pokemon pokemon={pokemon} />}
       </Content>
     </Container>
   );
